@@ -20,8 +20,7 @@ public class Scraping {
     /** 10分毎に実行 */
     @Scheduled(initialDelay = 1000, fixedRate = 10 * 60 * 1000)
     public void FetchRank(){
-        TeamRank team = new TeamRank();
-        repository.save(team);
+        System.out.println("hhoge");
     }
 
 }

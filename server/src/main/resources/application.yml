@@ -1,4 +1,11 @@
 spring:
+  profiles:
+    active: dev
   data:
-      mongodb:
-        database: yakiu
+    mongodb:
+      database: yakiu
+---
+spring:
+  profiles: dev
+  thymeleaf:
+    cache: false
