@@ -1,6 +1,4 @@
 spring:
-  datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/yakiu
-    username: postgres
-    password: postgres
+  data:
+      mongodb:
+        database: yakiu

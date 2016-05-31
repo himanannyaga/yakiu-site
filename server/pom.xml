@@ -21,22 +21,16 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-        <!--hibernateみたいな?-->
+        <!--mongoDB JDBC?-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <artifactId>spring-boot-starter-data-mongodb</artifactId>
         </dependency>
-        <!--すべてのSQLログ出すようにする、postgresだとエラー出る、てか開発環境はh2にすべき？-->
+        <!--mongoDBログ出力-->
         <dependency>
-            <groupId>org.bgee.log4jdbc-log4j2</groupId>
-            <artifactId>log4jdbc-log4j2-jdbc4.1</artifactId>
-            <version>1.16</version>
-        </dependency>
-        <!--postgresJDBCドライバ-->
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>9.4.1208.jre7</version>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-mongodb-log4j</artifactId>
+            <version>1.9.1.RELEASE</version>
         </dependency>
         <!--lombok-->
         <dependency>

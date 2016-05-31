@@ -1,40 +1,69 @@
-import com.myapp.domain.TeamKatimake;
+import com.myapp.App;
+import com.myapp.domain.TeamRank;
+import com.myapp.domain.Tyokin;
+import com.myapp.repository.TeamRepository;
+import com.myapp.util.ValidationUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * テストコード？
  */
+@RunWith(SpringJUnit4ClassRunner.class)
+@SpringApplicationConfiguration(classes = App.class)
+@Ignore
 public class ScrapingTest {
+    @Autowired
+    TeamRepository repository;
 
     /** yahooのランキングurl */
     private static final String RANK_URL = "http://baseball.yahoo.co.jp/npb/standings/";
     private static final String CE_ID = "#sta_c";
     private static final String PA_ID = "#sta_p";
-    private Date nowDate;
-    private List<TeamKatimake> teamList;
+    private Document doc;
+
     @Test
-    public void hoge() throws IOException {
-        nowDate = new Date();
-        teamList = new ArrayList<>();
-        final Document document = Jsoup.connect(RANK_URL).get();
-        //セリーグ
-        scraping(document, CE_ID);
-        scraping(document, PA_ID);
+    public void mongoTest() {
+        TeamRank team = new TeamRank();
+        ValidationUtil.valid(team);
+
+        repository.save(team);
     }
 
-    public void scraping(Document document, String selector){
+    @Test
+    public void hoge() throws IOException {
+        doc = Jsoup.connect(RANK_URL).get();
         //セリーグ
-        final Elements elms = document.select(selector + " table.NpbPlSt.yjM tr");
+        TeamRank ceLeagu = new TeamRank();
+        ceLeagu.setType("ce");
+        ceLeagu.setTeams(fetchTyokin(CE_ID));
+        ceLeagu.setUpdated(fetchUpdated(CE_ID));
+        System.out.println(ceLeagu);
+
+        TeamRank paLeagu = new TeamRank();
+        paLeagu.setType("ce");
+        paLeagu.setTeams(fetchTyokin(PA_ID));
+        paLeagu.setUpdated(fetchUpdated(PA_ID));
+        System.out.println(paLeagu);
+    }
+
+    /** チームごとの貯金とる */
+    public  List<Tyokin> fetchTyokin(String selector){
+        List<Tyokin> list = new ArrayList<>();
+        final Elements elms = doc.select(selector + " table.NpbPlSt.yjM tr");
         //一行目ヘッダなので抜かす
         elms.remove(0);
         for (Element elem : elms) {
@@ -46,15 +75,27 @@ public class ScrapingTest {
             final int syakkin =Integer.parseInt(elem.select("td:nth-child(5)").text());
 
             //チームオブジェクト作成
-            final TeamKatimake team = new TeamKatimake();
-            team.setTeam(teamCode);
+            final Tyokin team = new Tyokin();
+            team.setName(teamCode);
             team.setTyokin(tyokin - syakkin);
-            team.setUpdate(nowDate);
-            teamList.add(team);
+            list.add(team);
         }
+        return list;
+    }
+
+    /** 更新日時取る、正規表現や数値変換だけで冗長すぎ */
+    Date fetchUpdated(String selector){
+        final Element elm = doc.select(selector + " .left.yjMS").get(0);
+        Pattern p = Pattern.compile("([0-9]{4})年([0-9]+)月([0-9]+)日\\s([0-9]+)時([0-9]+)分更新");
+        Matcher m = p.matcher(elm.text());
+        if(m.find()){
+            return new GregorianCalendar(Integer.parseInt(m.group(1)), Integer.parseInt(m.group(2)) - 1,Integer.parseInt(m.group(3)),
+                    Integer.parseInt(m.group(4)),Integer.parseInt(m.group(5))).getTime();
+        }
+        throw new RuntimeException("おかしい");
     }
 }
-
+//enumのつくりかた
 enum Team {
     G("巨人"),
     T("阪神"),
