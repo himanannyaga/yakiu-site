@@ -1,23 +1,22 @@
 package com.myapp.controller;
 
+import com.myapp.domain.TeamRank;
+import com.myapp.repository.TeamRankRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import com.myapp.repository.TeamRepository;
-
-@Controller
-@RequestMapping("api/tyokin")
+@RestController
+@RequestMapping("api/rank")
 public class TyokinController {
 	@Autowired
-	private TeamRepository repository;
+	private TeamRankRepository repository;
 	
-//	@RequestMapping()
-//	public TeamRank get(@RequestBody @Valid TeamRank teamRank) {
-//		Query query = new BasicQuery("{ type: '" + teamRank.getType() + "'}")
-//		.limit(1)
-//		.with(new Sort(Sort.Direction.DESC, "updated"));;
-//		return repository.findLastInfo("hoge", new Sort(Sort.Direction.DESC, "updated"))
-//	}
+	@RequestMapping(value = "{leagueType}")
+	public TeamRank get(@PathVariable("leagueType") String leagueType) {
+		return repository.findLastUpdated(leagueType);
+	}
 	
 }

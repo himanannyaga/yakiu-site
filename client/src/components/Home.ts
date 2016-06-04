@@ -1,7 +1,8 @@
 import {Component} from "@angular/core";
 import {RouteParams} from "@angular/router-deprecated";
-import {LeagueInfo} from "../interfaces";
-
+import {LeagueInfo, TeamRank, Tyokin} from "../interfaces";
+import {Http, Headers} from "@angular/http";
+import {NumberPipe} from "../util/Util";
 
 export class LeagueConfig {
 	public static leagueConfig: LeagueInfo[] = [
@@ -26,12 +27,35 @@ export class LeagueConfig {
 	<div>
 		{{leagueInfo.title}}ランキング
 	</div>
-	`
+	<div *ngIf="teamRank">
+		<div *ngFor="let team of teamRank.teams; let i = index" class="rank-row">
+			<div class="juni">{{i + 1}}位</div>
+			<div class="syakkin-row">
+				<div class="icon-m kuroboshi" *ngFor="let hoge of team.tyokin * -1 | number"></div>
+			</div>
+			<div class="team-icon-wraper">
+				<div class="icon-m team-{{team.name.toLowerCase()}}"></div>
+			</div>
+			<div class="tyokin-row">
+				<div class="icon-m siroboshi" *ngFor="let hoge of team.tyokin | number"></div>
+			</div>
+		</div>
+		更新日時 {{teamRank.updated | date:"MMddHH:mm" }}
+	</div>
+
+	`,
+	styles: [require("./home.scss")],
+	pipes:[NumberPipe]
 })
 export class Home {
 	private leagueInfo: LeagueInfo;
-	constructor(private params: RouteParams) {};
+	private teamRank: TeamRank;
+	constructor(private params: RouteParams,
+							private http: Http) {};
 	private ngOnInit() {
 		this.leagueInfo = LeagueConfig.getLeagueObj(this.params.get("league"));
+		this.http.get(`api/rank/${this.leagueInfo.name}`)
+		.map(res => res.json())
+		.subscribe(data => this.teamRank = data);
 	}
 }
