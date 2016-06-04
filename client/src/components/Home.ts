@@ -42,7 +42,6 @@ export class LeagueConfig {
 		</div>
 		更新日時 {{teamRank.updated | date:"MMddHH:mm" }}
 	</div>
-
 	`,
 	styles: [require("./home.scss")],
 	pipes:[NumberPipe]
