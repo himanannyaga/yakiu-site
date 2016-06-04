@@ -1,8 +1,11 @@
-import com.myapp.App;
-import com.myapp.domain.TeamRank;
-import com.myapp.domain.Tyokin;
-import com.myapp.repository.TeamRepository;
-import com.myapp.util.ValidationUtil;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -12,22 +15,28 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.io.IOException;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import com.myapp.App;
+import com.myapp.domain.TeamRank;
+import com.myapp.domain.Tyokin;
+import com.myapp.repository.TeamRepository;
 
 /**
  * テストコード？
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = App.class)
-@Ignore
 public class ScrapingTest {
     @Autowired
     TeamRepository repository;
+
+    @Autowired
+    MongoTemplate mongo;
 
     /** yahooのランキングurl */
     private static final String RANK_URL = "http://baseball.yahoo.co.jp/npb/standings/";
@@ -38,9 +47,11 @@ public class ScrapingTest {
     @Test
     public void mongoTest() {
         TeamRank team = new TeamRank();
-        ValidationUtil.valid(team);
+        //ValidationUtil.valid(team);
+        Query query = new Query(Criteria.where("type").is("ce"));
+        TeamRank hoge = mongo.findOne(query, TeamRank.class);
+        System.out.println(hoge);
 
-        repository.save(team);
     }
 
     @Test
@@ -51,13 +62,19 @@ public class ScrapingTest {
         ceLeagu.setType("ce");
         ceLeagu.setTeams(fetchTyokin(CE_ID));
         ceLeagu.setUpdated(fetchUpdated(CE_ID));
+        ceLeagu.setUpdated(new Date());
         System.out.println(ceLeagu);
 
         TeamRank paLeagu = new TeamRank();
-        paLeagu.setType("ce");
+        paLeagu.setType("pa");
         paLeagu.setTeams(fetchTyokin(PA_ID));
         paLeagu.setUpdated(fetchUpdated(PA_ID));
         System.out.println(paLeagu);
+        TeamRank hoge = repository.findByLeaguAndUpdated(ceLeagu.getType(), ceLeagu.getUpdated());
+        System.out.println(hoge);
+        repository.save(ceLeagu);
+        repository.save(paLeagu);
+
     }
 
     /** チームごとの貯金とる */

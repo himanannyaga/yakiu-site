@@ -1,5 +1,3 @@
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-
 module.exports = {
 	entry: "./src/main.ts",
 	output: {
@@ -7,7 +5,8 @@ module.exports = {
     filename: 'main.js'
   },
 	resolve: {
-		extensions: ['', '.ts','.js']
+		extensions: ['', '.ts','.js'],
+		root:["./src"]
   },
 	module: {
     loaders: [
@@ -16,14 +15,8 @@ module.exports = {
         loader: 'awesome-typescript-loader'
       },
 			{ test: /\.html$/, loader: 'raw'},
-			//scssインポートするとrawで
-			{test: /\.scss$/, loaders: ["raw", "sass"]},
+			{ test: /\.scss$/, loaders: ["raw","sass"] },
+			{ test: /\.png$/, loader: "url" }
     ]
-  },
-		plugins: [
-		//index.htmlコピー
-		new CopyWebpackPlugin([
-			{ from: 'src/index.html'}
-		])
-	],
-}
+  }
+};
