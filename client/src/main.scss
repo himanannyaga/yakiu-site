@@ -1,37 +1,18 @@
 
-//画像系、webpackのraw-loaderだとURLエンコードしてくれないので
-//styleで読むこむここにとりあえず書く
-.title{
-	background: url("./img/title.png");
-}
-.icon-m {
-	content: "";
-	width: 32px;
-	min-width: 32px;
-	height: 32px;
-	min-height: 32px;
-}
-.icon-s-after:after {
-	content: "";
-	width: 16px;
-	min-width: 16px;
-	height: 16px;
-	min-height: 16px;
-}
-
-.arrow-bottom:after {
-	background: url("./img/arrow-bottom.png")
-}
-
 body{
 	padding-top: 55px;
 	overflow: visible;
 	// font-family: "Hiragino Kaku Gothic ProN","Meiryo";
 }
 
+h2{
+	font-weight: 500;
+	margin-bottom: 10px;
+}
+
 .container{
 	overflow-y: auto;
-	padding-bottom: 20px;
+	padding: 20px 0;
 }
 
 *{
@@ -43,6 +24,10 @@ a{
 }
 
 
+//画像系、webpackのraw-loaderだとURLエンコードしてくれないので
+//styleで読むこむここにとりあえず書く
+.title{	background: url("./img/title.png");}
+.arrow-bottom:after {	background: url("./img/arrow-bottom.png")}
 //借金、貯金
 .siroboshi{background: url("./img/siro.png")}
 .kuroboshi{background: url("./img/kuro.png")}
@@ -62,4 +47,18 @@ a{
 .team-bs {background: url("./img/buffalos.png")}
 .team-e {background: url("./img/eagles.png")}
 
+.icon-m {
+	content: "";
+	width: 32px;
+	min-width: 32px;
+	height: 32px;
+	min-height: 32px;
+}
+.icon-s-after:after {
+	content: "";
+	width: 16px;
+	min-width: 16px;
+	height: 16px;
+	min-height: 16px;
+}
 

@@ -1,5 +1,10 @@
 .rank-row {
 	display: flex;
+	padding: 4px 0;
+	border-bottom: 1px solid gray;
+	&:first-child {
+		border-top: 1px solid gray;
+	}
 	.team-icon-wraper {
 		display: flex;
 		align-items: center;
@@ -9,7 +14,7 @@
 .syakkin-row, .tyokin-row{
 	display: flex;
 	flex-wrap: wrap;
-	width: 300px;
+	width: 35%;
 }
 
 .syakkin-row {

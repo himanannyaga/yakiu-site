@@ -15,6 +15,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -30,13 +31,16 @@ import com.myapp.domain.Tyokin;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = App.class)
-@Ignore
 public class ScrapingTest {
     @Autowired
     TeamRankRepository repository;
 
+    @Value("${spring.profiles}")
+    private String profile;
+
     @Test
     public void mongoTest() {
+        System.out.println(profile);
         System.out.println(repository.findLastUpdated("ce"));
     }
 

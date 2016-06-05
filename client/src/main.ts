@@ -32,7 +32,7 @@ export class RootComponent {}
 
 
 /** 描写？ */
-bootstrap(RootComponent,[
+bootstrap(RootComponent, [
 	ROUTER_PROVIDERS,
 	HTTP_PROVIDERS
 ]);

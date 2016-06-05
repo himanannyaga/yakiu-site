@@ -4,6 +4,7 @@ package com.myapp.cron;
  * 定期的にスクレイピングする
  */
 
+import com.myapp.config.AppConfig;
 import com.myapp.domain.TeamRank;
 import com.myapp.domain.Tyokin;
 import com.myapp.repository.TeamRankRepository;
@@ -12,6 +13,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -28,6 +30,9 @@ public class Scraping {
     @Autowired
     TeamRankRepository repository;
 
+    @Value("${spring.profiles}")
+    private String profile;
+
     /** yahooのランキングurl */
     private static final String RANK_URL = "http://baseball.yahoo.co.jp/npb/standings/";
     private static final String CE_ID = "#sta_c";
@@ -37,7 +42,10 @@ public class Scraping {
     /** 10分毎にスクレイピングする */
     @Scheduled(initialDelay = 1000, fixedRate = 10 * 60 * 1000)
     public void FetchRank() throws IOException {
-
+        if(profile.equals("dev")){
+            System.out.println("開発環境はスクレイピングしない");
+            return;
+        }
         doc = Jsoup.connect(RANK_URL).get();
         //セリーグ
         TeamRank ceLeagu = new TeamRank();
@@ -53,6 +61,9 @@ public class Scraping {
         repository.upsertByUpdatedAndType(ceLeagu);
         repository.upsertByUpdatedAndType(paLeagu);
 
+        System.out.println("スクレイピングしました");
+        System.out.println(ceLeagu);
+        System.out.println(paLeagu);
     }
 
     /** チームごとの貯金とる */

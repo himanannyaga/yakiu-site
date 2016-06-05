@@ -2,7 +2,7 @@ import {Component} from "@angular/core";
 import {RouteParams} from "@angular/router-deprecated";
 import {LeagueInfo, TeamRank, Tyokin} from "../interfaces";
 import {Http, Headers} from "@angular/http";
-import {NumberPipe} from "../util/Util";
+import {NumberPipe, DateFormatPipe} from "../util/Util";
 
 export class LeagueConfig {
 	public static leagueConfig: LeagueInfo[] = [
@@ -24,9 +24,9 @@ export class LeagueConfig {
 
 @Component({
 	template:`
-	<div>
+	<h2>
 		{{leagueInfo.title}}ランキング
-	</div>
+	</h2>
 	<div *ngIf="teamRank">
 		<div *ngFor="let team of teamRank.teams; let i = index" class="rank-row">
 			<div class="juni">{{i + 1}}位</div>
@@ -40,11 +40,11 @@ export class LeagueConfig {
 				<div class="icon-m siroboshi" *ngFor="let hoge of team.tyokin | number"></div>
 			</div>
 		</div>
-		更新日時 {{teamRank.updated | date:"MMddHH:mm" }}
+		更新日時 {{teamRank.updated | dateToString }}
 	</div>
 	`,
 	styles: [require("./home.scss")],
-	pipes:[NumberPipe]
+	pipes:[NumberPipe, DateFormatPipe]
 })
 export class Home {
 	private leagueInfo: LeagueInfo;

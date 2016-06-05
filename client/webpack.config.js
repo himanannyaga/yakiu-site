@@ -1,8 +1,12 @@
 module.exports = {
-	entry: "./src/main.ts",
+	entry: {
+		"main": "./src/main.ts"
+	},
 	output: {
     path:"./dist",
-    filename: 'main.js'
+    filename: '[name].js',
+    sourceMapFilename: '[name].map',
+    chunkFilename: '[id].chunk.js'
   },
 	resolve: {
 		extensions: ['', '.ts','.js'],
@@ -18,5 +22,12 @@ module.exports = {
 			{ test: /\.scss$/, loaders: ["raw","sass"] },
 			{ test: /\.png$/, loader: "url" }
     ]
+  },
+	node: {
+    global: 'window',
+    crypto: 'empty',
+    module: false,
+    clearImmediate: false,
+    setImmediate: false
   }
 };
