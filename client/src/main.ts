@@ -5,7 +5,7 @@ import "rxjs/add/operator/map";
 import "zone.js/dist/zone";
 
 //angular2
-import {Component} from '@angular/core';
+import {Component, enableProdMode} from '@angular/core';
 import {HTTP_PROVIDERS} from '@angular/http';
 import {bootstrap}    from '@angular/platform-browser-dynamic';
 import {ROUTER_PROVIDERS, RouteConfig, ROUTER_DIRECTIVES} from "@angular/router-deprecated";
@@ -16,6 +16,11 @@ import {Home} from "./components/Home";
 
 //css scssローダーでcssへ→cssローダー→styleローダーでstyleタグへ
 require("!style!css!sass!./main.scss");
+
+
+if( ENV === "prod"){
+	enableProdMode();
+}
 
 /** 始まりのクラス？ */
 @Component({
